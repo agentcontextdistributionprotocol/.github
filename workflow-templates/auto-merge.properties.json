@@ -1,0 +1,6 @@
+{
+  "name": "ACDP auto-merge",
+  "description": "Auto-merge Dependabot PRs (patch + minor) once required checks pass, via acdp-ci.",
+  "iconName": "octicon-git-merge",
+  "categories": ["Automation"]
+}
