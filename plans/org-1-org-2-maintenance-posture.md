@@ -258,7 +258,10 @@ recorded here and cited in the PR body — the item is a judgment, and the judgm
 
 ## Phase 3 — ORG-2: complete the family repo map, spec first
 
-**Status:** not started
+**Status:** DONE — implemented exactly as planned, no divergence. Verified PASS
+(Opus verifier, round 1): 10 rows, exact canonical order, `.github` confirmed
+correct via independent `git remote -v` check, all 8 pre-existing descriptions
+byte-identical.
 **Delivers:** `profile/README.md`'s table is a complete 10-repo map of the family with the spec repo first.
 **Depends on:** Phase 1 (same file; Phase 1 inserts above the table, Phase 3 rewrites the table body — sequence them to keep each commit's diff clean).
 **Files:** `profile/README.md` (table body only; header row and `## Delivery` unchanged)

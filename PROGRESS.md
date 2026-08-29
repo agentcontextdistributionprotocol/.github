@@ -11,7 +11,7 @@
 |---|---|---|---|
 | 1 | Maintenance-posture paragraph into `profile/README.md` (verbatim from canonical source) | ORG-1a | DONE |
 | 2 | `SECURITY.md` — qualify the 3-day acknowledgement so it does not read as an SLA | ORG-1b | DONE |
-| 3 | Repo table completed to all ten repos, spec first | ORG-2 | not started |
+| 3 | Repo table completed to all ten repos, spec first | ORG-2 | DONE |
 
 Sequence phases in order — 1 and 3 touch the same file in different regions.
 
@@ -36,6 +36,25 @@ Sequence phases in order — 1 and 3 touch the same file in different regions.
 - **Assumptions logged:** none — plan's judgment call (additive edit, not a rewrite) was
   followed exactly.
 - **Next:** Phase 3 (repo table).
+
+### Phase 3 — 2026-08-28
+- **Verdict:** PASS, round 1/1. Verifier: fresh Opus subagent (trivial/low-risk tier).
+- **Why this tier:** table reorder/insert, no logic, mechanical to check.
+- **Gaps:** none.
+- **Files touched:** `profile/README.md` (table body: 2 new rows, 8 rows reordered,
+  descriptions byte-identical).
+- **Assumptions logged:** none new this phase — the plan's own open questions (table
+  order, `.github` vs `dotgithub` label, new-row wording) were already resolved with
+  defensible defaults in the plan and confirmed correct by the verifier via independent
+  `git remote -v` check.
+- **Next:** all 3 phases done — proceed to `/ship`.
+
+## All phases complete
+
+All 3 phases DONE, all verified PASS on round 1 (9 total tool-use verifier checks across
+3 rounds, zero re-verify loops needed). No entries in ASSUMPTIONS.md — every open question
+in the plan already had a defensible default that implementation followed and verifiers
+independently confirmed against ground truth (`git remote -v`, byte-for-byte diffs).
 
 ## Key decisions (details and reasoning in the plan)
 

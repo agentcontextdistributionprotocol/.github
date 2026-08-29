@@ -17,14 +17,16 @@ SECURITY.md in the org profile.
 
 | Repo | What it is |
 |---|---|
+| [`agentcontextdistributionprotocol`](https://github.com/agentcontextdistributionprotocol/agentcontextdistributionprotocol) | The specification — RFCs, conformance fixtures, and registries. The normative source for every implementation. |
 | [`acdp-rs`](https://github.com/agentcontextdistributionprotocol/acdp-rs) | Core Rust crate + the SDK bindings (npm/NAPI, Python/PyO3, WASM). The publish hub. |
+| [`acdp-verifier-py`](https://github.com/agentcontextdistributionprotocol/acdp-verifier-py) | Independent second implementation of the verification core (spec conformance). |
 | [`acdp-registry-rs`](https://github.com/agentcontextdistributionprotocol/acdp-registry-rs) | Registry service. |
+| [`acdp-website`](https://github.com/agentcontextdistributionprotocol/acdp-website) | Docs site. |
 | [`acdp-control-plane`](https://github.com/agentcontextdistributionprotocol/acdp-control-plane) | Control plane — ingests webhooks, correlates runs, broadcasts SSE. |
 | [`acdp-playground`](https://github.com/agentcontextdistributionprotocol/acdp-playground) | Scenario runner / demo harness. |
-| [`acdp-verifier-py`](https://github.com/agentcontextdistributionprotocol/acdp-verifier-py) | Independent second implementation of the verification core (spec conformance). |
 | [`acdp-ui-console`](https://github.com/agentcontextdistributionprotocol/acdp-ui-console) | Web console. |
-| [`acdp-website`](https://github.com/agentcontextdistributionprotocol/acdp-website) | Docs site. |
 | [`acdp-ci`](https://github.com/agentcontextdistributionprotocol/acdp-ci) | Shared CI/CD reusable workflows + the delivery standard. |
+| [`.github`](https://github.com/agentcontextdistributionprotocol/.github) | This repo — the org profile, the org-wide security policy, and shared workflow templates. |
 
 ## Delivery
 
