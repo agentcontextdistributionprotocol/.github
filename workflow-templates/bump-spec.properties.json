@@ -1,0 +1,6 @@
+{
+  "name": "ACDP bump-spec (spec pinners)",
+  "description": "Open a held (never auto-merged) PR adopting a new pinned ACDP spec SHA. Set file to the pinned workflow.",
+  "iconName": "octicon-pin",
+  "categories": ["Automation"]
+}

@@ -1,0 +1,19 @@
+name: bump spec
+# Spec-pinning repos only. Set `file` to the workflow holding this repo's pinned
+# spec `ref:` (exactly one pin per file), then delete this comment.
+on:
+  repository_dispatch:
+    types: [spec-released]
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: 'Spec SHA to adopt (blank = spec HEAD)'
+        required: false
+        default: ''
+jobs:
+  bump:
+    uses: agentcontextdistributionprotocol/acdp-ci/.github/workflows/bump-spec-ref.yml@v1
+    with:
+      file: .github/workflows/ci.yml
+      sha: ${{ github.event.inputs.sha }}
+    secrets: inherit
