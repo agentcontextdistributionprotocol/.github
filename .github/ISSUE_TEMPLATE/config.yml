@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/agentcontextdistributionprotocol/.github/blob/main/SECURITY.md
+    about: Do not open a public issue. Follow the security policy to report privately.
+  - name: Propose a protocol change (RFC)
+    url: https://github.com/agentcontextdistributionprotocol/agentcontextdistributionprotocol/issues/new/choose
+    about: Changes to the ACDP specification itself belong in the spec repository.
