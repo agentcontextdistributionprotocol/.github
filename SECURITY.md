@@ -7,7 +7,8 @@ Please report security issues privately via
 on the relevant repository, or by email to **security@zer07labs.com**. Do not
 open a public issue for a suspected vulnerability.
 
-We aim to acknowledge reports within 3 business days.
+We aim to acknowledge reports within 3 business days. This is a best-effort
+target from a single maintainer, not a guaranteed response time.
 
 ## Supply chain
 

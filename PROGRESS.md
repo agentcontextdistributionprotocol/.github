@@ -10,7 +10,7 @@
 | # | Phase | Item | Status |
 |---|---|---|---|
 | 1 | Maintenance-posture paragraph into `profile/README.md` (verbatim from canonical source) | ORG-1a | DONE |
-| 2 | `SECURITY.md` — qualify the 3-day acknowledgement so it does not read as an SLA | ORG-1b | not started |
+| 2 | `SECURITY.md` — qualify the 3-day acknowledgement so it does not read as an SLA | ORG-1b | DONE |
 | 3 | Repo table completed to all ten repos, spec first | ORG-2 | not started |
 
 Sequence phases in order — 1 and 3 touch the same file in different regions.
@@ -24,6 +24,18 @@ Sequence phases in order — 1 and 3 touch the same file in different regions.
 - **Files touched:** `profile/README.md` (10-line insertion, paragraph + 2 blank lines).
 - **Assumptions logged:** none — plan's decisions were followed exactly, no new judgment calls made during execution.
 - **Next:** Phase 2 (SECURITY.md).
+
+### Phase 2 — 2026-08-28
+- **Verdict:** PASS, round 1/1. Verifier: fresh Opus subagent (trivial/low-risk tier).
+- **Why this tier:** one-sentence additive doc edit, no logic.
+- **Gaps:** none (verifier flagged one nit — AC1's literal-substring wording doesn't
+  account for the plan's own hard-wrap, which puts a newline between "best-effort" and
+  "target"; whitespace-normalized it matches. Not a defect in the edit, a wording gap in
+  the AC itself. No action needed.)
+- **Files touched:** `SECURITY.md` (1 line → 2 lines, additive sentence).
+- **Assumptions logged:** none — plan's judgment call (additive edit, not a rewrite) was
+  followed exactly.
+- **Next:** Phase 3 (repo table).
 
 ## Key decisions (details and reasoning in the plan)
 

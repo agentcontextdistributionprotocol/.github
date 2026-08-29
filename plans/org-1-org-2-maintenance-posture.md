@@ -172,7 +172,9 @@ edit it from this session.
 
 ## Phase 2 — ORG-1b: SECURITY.md response-expectation consistency
 
-**Status:** not started
+**Status:** DONE — implemented exactly as planned, no divergence. Verified PASS
+(Opus verifier, round 1): additive edit resolves the SLA tension against the
+Phase 1 posture paragraph, scope stays clear of ORG-4.
 **Delivers:** `SECURITY.md` states a response expectation that cannot be read as an SLA, consistent with the posture paragraph landed in Phase 1.
 **Depends on:** Phase 1 (only for narrative coherence — the SECURITY.md wording is justified by the posture statement; no file-level dependency).
 **Files:** `SECURITY.md` (one line)
