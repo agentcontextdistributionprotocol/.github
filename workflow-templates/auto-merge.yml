@@ -1,4 +1,10 @@
 name: auto-merge
+# Prerequisite: this repo's default branch must have branch protection with at
+# least one required status check before you adopt this workflow. On an ungated
+# branch GitHub's native auto-merge would merge instantly, so acdp-ci's reusable
+# auto-merge.yml refuses to arm and fails the Dependabot run instead. Run
+# acdp-ci's scripts/standardize.sh against this repo first (see that repo's
+# DELIVERY-STANDARD.md), then delete this comment.
 on: pull_request
 permissions:
   contents: write
