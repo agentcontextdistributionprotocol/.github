@@ -6,7 +6,8 @@ verifying agent context across registries and control planes.
 **Project status.** ACDP is maintained by a single maintainer on a best-effort
 basis; changes land when a consumer needs them, with no SLA. The stable surface
 is the 0.1.0 / 0.2.0 / 0.3.0 / 0.4.0 Final lines, which are wire-frozen.
-RFC-ACDP-0009 is Reserved and is not a dependable surface until promoted.
+RFC-ACDP-0016 (typed external anchors) is Draft on the open 0.5.0 line, and
+RFC-ACDP-0009 is Reserved; neither is a dependable surface until promoted.
 Promotion to Final requires the conformance pack to pass against two independent
 implementations (`acdp-rs` and `acdp-verifier-py`); the second implementation is
 therefore part of the protocol's governance machinery, not an optional extra.
