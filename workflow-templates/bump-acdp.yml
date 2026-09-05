@@ -16,5 +16,7 @@ jobs:
     with:
       ecosystem: npm
       package: '@agentcontextdistributionprotocol/acdp'
-      version: ${{ github.event.inputs.version }}
-    secrets: inherit
+      version: '${{ github.event.inputs.version }}'
+    secrets:
+      ACDP_BOT_APP_ID: '${{ secrets.ACDP_BOT_APP_ID }}'
+      ACDP_BOT_PRIVATE_KEY: '${{ secrets.ACDP_BOT_PRIVATE_KEY }}'

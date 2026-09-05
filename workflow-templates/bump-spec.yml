@@ -15,5 +15,7 @@ jobs:
     uses: agentcontextdistributionprotocol/acdp-ci/.github/workflows/bump-spec-ref.yml@v1
     with:
       file: .github/workflows/ci.yml
-      sha: ${{ github.event.inputs.sha }}
-    secrets: inherit
+      sha: '${{ github.event.inputs.sha }}'
+    secrets:
+      ACDP_BOT_APP_ID: '${{ secrets.ACDP_BOT_APP_ID }}'
+      ACDP_BOT_PRIVATE_KEY: '${{ secrets.ACDP_BOT_PRIVATE_KEY }}'
