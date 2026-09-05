@@ -1,6 +1,8 @@
 name: bump spec
-# Spec-pinning repos only. Set `file` to the workflow holding this repo's pinned
-# spec `ref:` (exactly one pin per file), then delete this comment.
+# Prerequisite: the acdp-deps-bot org secrets ACDP_BOT_APP_ID and
+# ACDP_BOT_PRIVATE_KEY must be reachable from this repo. Spec-pinning repos
+# only: set `file` to the workflow holding this repo's pinned spec `ref:`
+# (exactly one pin per file), then delete this comment.
 on:
   repository_dispatch:
     types: [spec-released]
@@ -15,5 +17,7 @@ jobs:
     uses: agentcontextdistributionprotocol/acdp-ci/.github/workflows/bump-spec-ref.yml@v1
     with:
       file: .github/workflows/ci.yml
-      sha: ${{ github.event.inputs.sha }}
-    secrets: inherit
+      sha: '${{ github.event.inputs.sha }}'
+    secrets:
+      ACDP_BOT_APP_ID: '${{ secrets.ACDP_BOT_APP_ID }}'
+      ACDP_BOT_PRIVATE_KEY: '${{ secrets.ACDP_BOT_PRIVATE_KEY }}'

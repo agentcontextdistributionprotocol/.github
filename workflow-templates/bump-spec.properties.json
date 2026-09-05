@@ -1,6 +1,6 @@
 {
   "name": "ACDP bump-spec (spec pinners)",
-  "description": "Open a held (never auto-merged) PR adopting a new pinned ACDP spec SHA. Set file to the pinned workflow.",
+  "description": "Open a held (never auto-merged) PR adopting a new pinned ACDP spec SHA. Set file to the pinned workflow. Requires org secrets ACDP_BOT_APP_ID, ACDP_BOT_PRIVATE_KEY.",
   "iconName": "octicon-pin",
   "categories": ["Automation"]
 }
