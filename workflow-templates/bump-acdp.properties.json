@@ -1,6 +1,6 @@
 {
   "name": "ACDP bump-acdp (consumer)",
-  "description": "Open an auto-merging PR when the acdp SDK publishes. Set ecosystem npm|cargo|uv.",
+  "description": "Open a PR when the acdp SDK publishes; non-breaking bumps auto-merge when required checks exist, breaking ones are held. Set ecosystem npm|cargo|uv. Requires org secrets ACDP_BOT_APP_ID, ACDP_BOT_PRIVATE_KEY.",
   "iconName": "octicon-package-dependents",
   "categories": ["Automation"]
 }

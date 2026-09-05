@@ -1,6 +1,8 @@
 name: bump acdp
-# Consumer repos only. Set `ecosystem` (npm | cargo | uv) and `package` to match
-# this repo's manifest, then delete this comment.
+# Prerequisite: the acdp-deps-bot org secrets ACDP_BOT_APP_ID and
+# ACDP_BOT_PRIVATE_KEY must be reachable from this repo. Consumer repos only:
+# set `ecosystem` (npm | cargo | uv) and `package` to match this repo's
+# manifest, then delete this comment.
 on:
   repository_dispatch:
     types: [acdp-released]
