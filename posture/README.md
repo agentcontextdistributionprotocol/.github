@@ -37,6 +37,15 @@ last one is separate on purpose: a run that could not read canonical is not a ru
 that found no drift, and collapsing the two is how a blind check gets read as a
 clean one.
 
+These codes are a **contract**, not an implementation detail:
+`.github/workflows/posture-drift.yml` routes on them, rendering "Drift found" for
+`1` and "The check could not see — do not read it as 'no drift'" for `2`. So they
+are asserted at the CLI with exact values, never "non-zero" — an assertion that
+merely required non-zero would let `1` and `2` quietly collapse back together and
+turn a blind run into a drift report. `TestExitCodeContract` pins each one, and
+those assertions were mutation-tested: reverting the fixes they cover makes them
+fail, so none of them passes vacuously.
+
 ## Files
 
 | File | Purpose |
@@ -44,7 +53,7 @@ clean one.
 | `copies.json` | The registry: canonical, every copy, every repo asserted to hold none, and why the two known non-copies are excluded |
 | `check_drift.py` | The check. Stdlib only |
 | `regenerate.py` | Rewrites this repo's copy from canonical. Shares `extract()` with the checker so the writer and the police agree |
-| `test_check_drift.py` | 28 tests, run in CI before the check itself |
+| `test_check_drift.py` | 36 tests, run in CI before the check itself |
 
 ## Usage
 

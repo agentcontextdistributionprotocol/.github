@@ -10,6 +10,7 @@ actually produced), and any path where the check cannot see but reports success.
 """
 
 import json
+import sys
 import unittest
 from pathlib import Path
 
@@ -269,3 +270,115 @@ class TestSelfCheckout(unittest.TestCase):
         (self.tmp / "profile" / "README.md").unlink()
         findings, _, _ = cd.run(MANIFEST, sources(), "own", self_checkout=self.tmp)
         self.assertEqual([f["kind"] for f in findings], ["MISSING"])
+
+
+class TestExitCodeContract(unittest.TestCase):
+    """The 1-versus-2 boundary, asserted at the CLI where it is actually consumed.
+
+    .github/workflows/posture-drift.yml routes on these exact codes: 1 renders
+    "Drift found", 2 renders "The check could not see -- do not read it as no
+    drift". Collapsing them turns a blind run into a drift report, which is the
+    failure this whole check exists to avoid.
+
+    Everything above tests run(); none of it touches main(), so the mapping from
+    Operational to 2 and findings to 1 was unasserted -- changing `return 2` to
+    `return 1` passed all 28 of them. Asserted here with exact codes, never
+    "non-zero", so the two cannot quietly collapse back together.
+
+    Run as a subprocess so argparse wiring and the return-to-exit path are
+    covered too, not just the function bodies.
+    """
+
+    SCRIPT = HERE / "check_drift.py"
+
+    def setUp(self):
+        import tempfile
+        self.ws = Path(tempfile.mkdtemp())
+        self.write("spec/README.md", f"# Spec\n\n## Project status\n\n{CANON_PARA}\n")
+        self.write("ours/profile/README.md",
+                   "# Org\n\n**Project status.** " + wrap(CANON_PARA, 81) + "\n")
+        self.write("theirs/README.md",
+                   "# Theirs\n\n## Project status\n\n" + wrap(CANON_PARA, 80) + "\n")
+        self.write("clean/README.md", "# Clean\n\nNothing.\n")
+        self.manifest = self.ws / "manifest.json"
+        self.manifest.write_text(json.dumps({
+            "anchors": MANIFEST["anchors"],
+            "canonical": {"repo": "org/spec", "path": "README.md", "local_dir": "spec"},
+            "copies": [
+                {"repo": "org/ours", "path": "profile/README.md",
+                 "local_dir": "ours", "owner": "self"},
+                {"repo": "org/theirs", "path": "README.md", "local_dir": "theirs",
+                 "owner": "org/theirs"},
+            ],
+            "no_copy": {"repos": ["org/clean"]},
+            "unscannable": [],
+        }), encoding="utf-8")
+
+    def tearDown(self):
+        import shutil; shutil.rmtree(self.ws)
+
+    def write(self, rel, text):
+        f = self.ws / rel
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_text(text, encoding="utf-8")
+
+    def run_cli(self, *extra):
+        import subprocess
+        return subprocess.run(
+            [sys.executable, str(self.SCRIPT), "--manifest", str(self.manifest),
+             "--source", "local", "--workspace", str(self.ws), *extra],
+            capture_output=True, text=True)
+
+    def test_in_sync_exits_0(self):
+        r = self.run_cli()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("in sync", r.stdout)
+
+    def test_drift_exits_exactly_1(self):
+        self.write("theirs/README.md", "# Theirs\n\n## Project status\n\n" +
+                   wrap(CANON_PARA.replace("0.4.0 Final", "0.3.0 Final"), 80) + "\n")
+        r = self.run_cli()
+        self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+        self.assertIn("DRIFT", r.stdout)
+
+    def test_missing_exits_exactly_1(self):
+        (self.ws / "theirs" / "README.md").unlink()
+        self.assertEqual(self.run_cli().returncode, 1)
+
+    def test_unregistered_exits_exactly_1(self):
+        self.write("clean/README.md", "# Clean\n\n" + wrap(CANON_PARA, 80) + "\n")
+        r = self.run_cli()
+        self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+        self.assertIn("UNREGISTERED", r.stdout)
+
+    def test_unreadable_canonical_exits_exactly_2_not_1(self):
+        """The one that matters: blind must not be reportable as drift."""
+        import shutil; shutil.rmtree(self.ws / "spec")
+        r = self.run_cli()
+        self.assertEqual(r.returncode, 2, r.stdout + r.stderr)
+        self.assertIn("FATAL", r.stderr)
+        self.assertNotIn("DRIFT", r.stdout)
+
+    def test_canonical_anchors_broken_exits_exactly_2(self):
+        self.write("spec/README.md", "# Spec\n\nrewritten, no anchors\n")
+        self.assertEqual(self.run_cli().returncode, 2)
+
+    def test_unreadable_copy_exits_exactly_2_not_1(self):
+        """A copy we cannot read is not a copy we found drift in."""
+        import shutil; shutil.rmtree(self.ws / "theirs")
+        r = self.run_cli()
+        self.assertEqual(r.returncode, 2, r.stdout + r.stderr)
+
+    def test_drift_and_blind_never_share_a_code(self):
+        # Introduce real drift first. Comparing an in-sync run against a blind one
+        # would pass even with the codes collapsed, which is what this asserts against.
+        self.write("theirs/README.md", "# Theirs\n\n## Project status\n\n" +
+                   wrap(CANON_PARA.replace("0.4.0 Final", "0.3.0 Final"), 80) + "\n")
+        drift = self.run_cli()
+        self.assertEqual(drift.returncode, 1)
+        self.write("spec/README.md", "# Spec\n\nno anchors\n")
+        blind = self.run_cli()
+        self.assertEqual(blind.returncode, 2)
+        self.assertNotEqual(drift.returncode, blind.returncode,
+                            "exit codes collapsed: the workflow cannot tell a blind "
+                            "run from a drift report")
