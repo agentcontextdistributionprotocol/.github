@@ -46,6 +46,12 @@ jobs:
       - name: Self-test the checker
         run: python3 -m unittest discover -s posture -p 'test_*.py' -v
 
+      # Guards the tests themselves. A green suite says the tests pass, not that they
+      # would catch anything -- and this repo has already shipped one test that passed
+      # with the bug it was written to catch still present.
+      - name: Mutation-test the checker
+        run: python3 posture/mutation_test.py
+
       - name: Check for drift
         id: drift
         env:
