@@ -34,14 +34,14 @@
       "path": "profile/README.md",
       "local_dir": "dotgithub",
       "owner": "self",
-      "note": "Org profile front page. Keeps a '**Project status.**' run-in prefix instead of a heading and is hard-wrapped to 81 columns; both are local adaptations that survive normalisation. Regenerate with posture/regenerate-profile-copy.sh -- never retype."
+      "note": "Org profile front page. Keeps a '**Project status.**' run-in prefix instead of a heading and is hard-wrapped to 81 columns; both are local adaptations that survive normalisation. Wrapped at 81 columns with the prefix included in the wrap. Regenerate with posture/regenerate.py -- never retype. An HTML comment above the paragraph repeats the registration rule where a copy-paste would actually start."
     },
     {
       "repo": "agentcontextdistributionprotocol/acdp-verifier-py",
       "path": "README.md",
       "local_dir": "acdp-verifier-py",
       "owner": "acdp-verifier-py",
-      "note": "Under a '## Project status' heading, hard-wrapped. Went stale once (their #26, fixed 2026-09-06); that staleness is why this check exists."
+      "note": "Under a '## Project status' heading, hard-wrapped. Wrapped at 80 columns, starting at column 1 under the heading -- deliberately not our 81, confirmed by that session on 2026-09-06. Width is cosmetic because comparison is whitespace-normalised; recorded so nobody 'corrects' it toward ours. Went stale once (their #26, fixed 2026-09-06); that staleness is why this check exists."
     }
   ],
 
