@@ -1,0 +1,87 @@
+{
+  "$comment": [
+    "Registry of every place the ACDP maintenance-posture paragraph is copied.",
+    "The paragraph has ONE owner: the spec repo's README. Every other occurrence is a",
+    "verbatim copy, regenerated mechanically and never retyped. This file is what makes",
+    "'is every copy current?' a checkable question instead of a hope.",
+    "Adding a copy anywhere in the org means adding it here in the same change."
+  ],
+
+  "anchors": {
+    "$comment": [
+      "The paragraph is extracted by anchoring on its first and last sentence, AFTER",
+      "whitespace normalisation. Order matters: copies are hard-wrapped at different",
+      "widths, so the end anchor is split across a newline in some of them and anchoring",
+      "on raw text reports a false DRIFT. Normalise first, then anchor.",
+      "The start anchor deliberately includes 'ACDP is' -- 'a single maintainer' alone",
+      "also matches the website footer paraphrase and a spec CHANGELOG entry, neither of",
+      "which is a copy (see 'excluded')."
+    ],
+    "start": "ACDP is maintained by a single maintainer",
+    "end": "Security reports: see SECURITY.md in the org profile."
+  },
+
+  "canonical": {
+    "repo": "agentcontextdistributionprotocol/agentcontextdistributionprotocol",
+    "path": "README.md",
+    "local_dir": "agentcontextdistributionprotocol",
+    "note": "Sole owner of the wording. Changes here are expected to propagate outward."
+  },
+
+  "copies": [
+    {
+      "repo": "agentcontextdistributionprotocol/.github",
+      "path": "profile/README.md",
+      "local_dir": "dotgithub",
+      "owner": "self",
+      "note": "Org profile front page. Keeps a '**Project status.**' run-in prefix instead of a heading and is hard-wrapped to 81 columns; both are local adaptations that survive normalisation. Regenerate with posture/regenerate-profile-copy.sh -- never retype."
+    },
+    {
+      "repo": "agentcontextdistributionprotocol/acdp-verifier-py",
+      "path": "README.md",
+      "local_dir": "acdp-verifier-py",
+      "owner": "acdp-verifier-py",
+      "note": "Under a '## Project status' heading, hard-wrapped. Went stale once (their #26, fixed 2026-09-06); that staleness is why this check exists."
+    }
+  ],
+
+  "no_copy": {
+    "$comment": [
+      "Repos asserted to hold NO copy. The check reads each one's README and fails if the",
+      "paragraph appears, so a copy that gets pasted somewhere new is caught instead of",
+      "silently sitting outside the registry forever. Covers READMEs only -- see the",
+      "'Known coverage limits' section of posture/README.md."
+    ],
+    "repos": [
+      "agentcontextdistributionprotocol/acdp-ci",
+      "agentcontextdistributionprotocol/acdp-control-plane",
+      "agentcontextdistributionprotocol/acdp-playground",
+      "agentcontextdistributionprotocol/acdp-registry-rs",
+      "agentcontextdistributionprotocol/acdp-rs",
+      "agentcontextdistributionprotocol/acdp-ui-console"
+    ]
+  },
+
+  "unscannable": [
+    {
+      "repo": "agentcontextdistributionprotocol/acdp-website",
+      "reason": "Private. A GITHUB_TOKEN scoped to the .github repo cannot read it, so this check cannot cover it. Reported as uncovered on every run rather than skipped, so coverage is never overstated.",
+      "known_state": "components/footer.tsx:125 carries a one-line paraphrase with no version claims -- deliberately not a copy (see 'excluded')."
+    }
+  ],
+
+  "excluded": [
+    {
+      "repo": "agentcontextdistributionprotocol/acdp-website",
+      "path": "components/footer.tsx",
+      "line": 125,
+      "reason": "Paraphrase, not a copy: 'Maintained by a single maintainer on a best-effort basis, with no SLA.' Makes no version or RFC-status claim, so it cannot go stale the way a copy can. Verified 2026-09-05. Do not 'fix' this to match canonical."
+    },
+    {
+      "repo": "agentcontextdistributionprotocol/agentcontextdistributionprotocol",
+      "path": "CHANGELOG.md",
+      "line": 159,
+      "reason": "Historical record of when the posture section was introduced, naming RFC-ACDP-0015 as Draft because it was Draft then. A changelog entry is supposed to stay wrong about the present. Never re-sync it."
+    }
+  ]
+}
