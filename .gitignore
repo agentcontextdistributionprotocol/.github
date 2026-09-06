@@ -4,3 +4,4 @@ ASSUMPTIONS.md
 DECISIONS.md
 .drive.lock
 .DS_Store
+__pycache__/

@@ -1,0 +1,103 @@
+name: posture drift
+
+# The maintenance-posture paragraph has one owner (the spec repo's README) and is
+# copied verbatim into sibling repos. A stale copy is invisible to the repo holding
+# it: the copy does not change, canonical moves out from under it. No per-repo review
+# can catch that, so it needs a job that reads across all of them.
+#
+# Scheduled runs are the point. A failure here is expected to arrive as a scheduled-run
+# failure notification, which is why this job is allowed to go red for a copy this repo
+# does not own -- that red is the notification. Pull-request runs are scoped to this
+# repo's own copy instead, so a sibling's drift can never block unrelated work here.
+
+on:
+  schedule:
+    # Weekly, Monday 07:23 UTC -- off the top of the hour, and deliberately clear of
+    # acdp-ci's 06:17 slot so the org's scheduled jobs do not bunch up.
+    - cron: '23 7 * * 1'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'profile/README.md'
+      - 'posture/**'
+      - '.github/workflows/posture-drift.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'profile/README.md'
+      - 'posture/**'
+      - '.github/workflows/posture-drift.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: posture-drift-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # Stdlib only, no install step. ubuntu-latest ships python3; adding setup-python
+      # would buy nothing and widen the supply chain for a single script.
+      - name: Self-test the checker
+        run: python3 -m unittest discover -s posture -p 'test_*.py' -v
+
+      - name: Check for drift
+        id: drift
+        env:
+          # Raises the API rate limit and is enough to read the org's public repos.
+          # It cannot read acdp-website (private); the check reports that as UNCOVERED
+          # on every run rather than skipping it silently.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # own = this repo's copy only. all = every registered copy in the org.
+          SCOPE: ${{ github.event_name == 'pull_request' && 'own' || 'all' }}
+        run: |
+          # GitHub runs this under `bash -e`. A non-zero exit is the NORMAL outcome
+          # here (1 = findings, 2 = blind), and it has to be captured rather than abort
+          # the step, or the summary below never renders and the run reports a bare
+          # failure with nothing explaining it.
+          set +e
+          set -o pipefail
+          # --checkout . is load-bearing on pull_request: the API serves the base
+          # branch, so without it the check reads the paragraph the PR is trying to
+          # change and passes a hand-edit.
+          python3 posture/check_drift.py --scope "$SCOPE" --checkout . | tee result.txt
+          status=${PIPESTATUS[0]}
+          set -e
+          {
+            echo "## Posture drift check (\`--scope $SCOPE\`)"
+            echo
+            case "$status" in
+              0) echo "Every copy this check can see is in sync with canonical." ;;
+              1) echo "**Drift found.** See the findings below." ;;
+              2) echo "**The check could not see.** This is an operational failure, not"
+                 echo "a clean run -- do not read it as 'no drift'." ;;
+              *) echo "**Unexpected exit $status.**" ;;
+            esac
+            echo
+            echo '```'
+            cat result.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"
+
+      - name: Explain a failure
+        if: failure() && steps.drift.outcome == 'failure'
+        run: |
+          {
+            echo "### What to do"
+            echo
+            echo "- **DRIFT / MISSING on \`.github/profile/README.md\`** -- ours. Run"
+            echo "  \`python3 posture/regenerate.py\` and commit. Never retype the paragraph."
+            echo "- **DRIFT / MISSING on another repo** -- theirs. File an issue there;"
+            echo "  do not edit a sibling repo from here."
+            echo "- **UNREGISTERED** -- a copy exists that \`posture/copies.json\` does not"
+            echo "  account for. Register it (or record why it is not a copy) in the same"
+            echo "  change that introduced it."
+            echo "- **exit 2** -- the check was blind. Fix the access problem; a blind run"
+            echo "  is never evidence of sync."
+          } >> "$GITHUB_STEP_SUMMARY"
