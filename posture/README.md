@@ -54,6 +54,31 @@ fail, so none of them passes vacuously.
 | `check_drift.py` | The check. Stdlib only |
 | `regenerate.py` | Rewrites this repo's copy from canonical. Shares `extract()` with the checker so the writer and the police agree |
 | `test_check_drift.py` | 36 tests, run in CI before the check itself |
+| `mutation_test.py` | Injects six known bugs and requires each to be caught. Also run in CI |
+
+## Mutation testing
+
+A green suite says the tests pass, not that they would catch anything. This repo
+has already shipped one test that passed with the bug it was written to catch
+still present, so `mutation_test.py` injects six known bugs and requires each to
+be caught. It runs in CI alongside the tests.
+
+Two things it is specifically built to avoid, both learned by getting them wrong:
+
+- **An unapplied mutant looks exactly like an uncaught bug.** A substitution that
+  silently matches nothing leaves the source pristine, the suite passes, and a
+  naive harness reports "survived" — indistinguishable from a real hole, and wrong
+  in the more alarming direction. Every substitution asserts it matched **exactly
+  once**; anything else is a hard exit 2, never a result.
+- **A count of kills is not evidence of a good mutant.** A crude edit that breaks
+  the module outright is killed by everything and reads as extra confidence while
+  proving nothing about the guard it was aimed at. So each mutant declares *which*
+  tests must kill it, and the actual killer set must match exactly — over-killing
+  fails as loudly as under-killing.
+
+The expected killer sets are **measured, not guessed**. Where a test that looks
+like it should defend a guard does not, the reason is recorded next to the mutant
+rather than left as a surprise.
 
 ## Usage
 
