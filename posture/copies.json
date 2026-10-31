@@ -53,6 +53,7 @@
       "'Known coverage limits' section of posture/README.md."
     ],
     "repos": [
+      "agentcontextdistributionprotocol/acdp-agent-hooks",
       "agentcontextdistributionprotocol/acdp-ci",
       "agentcontextdistributionprotocol/acdp-control-plane",
       "agentcontextdistributionprotocol/acdp-playground",
@@ -66,7 +67,12 @@
     {
       "repo": "agentcontextdistributionprotocol/acdp-website",
       "reason": "Private. A GITHUB_TOKEN scoped to the .github repo cannot read it, so this check cannot cover it. Reported as uncovered on every run rather than skipped, so coverage is never overstated.",
-      "known_state": "components/footer.tsx:125 carries a one-line paraphrase with no version claims -- deliberately not a copy (see 'excluded')."
+      "known_state": "components/footer.tsx:125 carries a one-line paraphrase with no version claims -- deliberately not a copy (see 'excluded'). Re-verified 2026-10-31 against acdp-website main 524f4f6 from a local checkout: no file contains either anchor."
+    },
+    {
+      "repo": "agentcontextdistributionprotocol/acdp-docs",
+      "reason": "Private, same as acdp-website: a GITHUB_TOKEN scoped to the .github repo cannot read it or even see it in the org listing. Registered here so a run with a broader token reports it as uncovered instead of UNREGISTERED.",
+      "known_state": "Verified 2026-10-31 from a local checkout: kb/ chapters summarise the posture ('single maintainer, best effort, no SLA') and quote the anchors, but no file contains the paragraph -- summaries, not copies."
     }
   ],
 
