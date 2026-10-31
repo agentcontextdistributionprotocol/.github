@@ -118,8 +118,9 @@ a file inside an accounted-for repo has quietly become a second copy.
 Stated rather than left to be discovered, because a check whose limits are unclear
 gets trusted for more than it does.
 
-1. **`acdp-website` is not covered.** It is private, and a `GITHUB_TOKEN` scoped to
-   this repo cannot read it. Reported as `UNCOVERED` on every run.
+1. **`acdp-website` and `acdp-docs` are not covered.** Both are private, and a
+   `GITHUB_TOKEN` scoped to this repo cannot read them. Each is reported as
+   `UNCOVERED` on every run; `copies.json` records their last hand-verified state.
 2. **The unregistered-copy sweep reads READMEs only.** A copy pasted into some other
    file in an accounted-for repo is not detected. READMEs are where the paragraph
    has actually spread; widening this to full code search needs a token this
